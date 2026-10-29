@@ -1,7 +1,7 @@
 Summary: Spell checker
 Name: aspell
 Version: 0.60.8
-Release: 8%{?dist}
+Release: 9%{?dist}
 Epoch: 12
 # LGPLv2+ .. common/gettext.h
 # LGPLv2  .. modules/speller/default/phonet.hpp,
@@ -16,6 +16,7 @@ Source: ftp://ftp.gnu.org/gnu/aspell/aspell-%{version}.tar.gz
 Patch0: aspell-0.60.7-fileconflict.patch
 Patch1: aspell-0.60.7-pspell_conf.patch
 Patch2: aspell-0.60.7-mp.patch
+Patch3: aspell-0.60.8-reserve-and-datahead-cap.patch
 
 BuildRequires: gcc-c++
 BuildRequires: chrpath, gettext, ncurses-devel, pkgconfig, perl-interpreter
@@ -45,6 +46,8 @@ and header files needed for Aspell development.
 %patch0 -p1 -b .fc
 %patch1 -p1 -b .mlib
 %patch2 -p1 -b .ai
+%patch3 -p1
+
 iconv -f iso-8859-2 -t utf-8 < manual/aspell.info > manual/aspell.info.aux
 mv manual/aspell.info.aux manual/aspell.info
 
@@ -111,6 +114,9 @@ rm -f ${RPM_BUILD_ROOT}%{_infodir}/dir
 %{_mandir}/man1/pspell-config.1*
 
 %changelog
+* Wed Oct 21 2026 Daniel Handzus <dhandzus@redhat.com> - 12:0.60.8-9
+- Backport fix for CVE-2026-103658
+
 * Mon Aug 09 2021 Mohan Boddu <mboddu@redhat.com> - 12:0.60.8-8
 - Rebuilt for IMA sigs, glibc 2.34, aarch64 flags
   Related: rhbz#1991688

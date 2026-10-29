@@ -1,0 +1,32 @@
+diff --git a/common/string.hpp b/common/string.hpp
+index 18f67df..ee30b45 100644
+--- a/common/string.hpp
++++ b/common/string.hpp
+@@ -75,7 +75,7 @@ namespace acommon {
+   public:
+     void reserve(size_t s) 
+     {
+-      if (storage_end_ - begin_ >= (int)s + 1) return;
++      if ((size_t)(storage_end_ - begin_) >= s + 1) return;
+       reserve_i(s);
+     }
+ 
+diff --git a/modules/speller/default/readonly_ws.cpp b/modules/speller/default/readonly_ws.cpp
+index c38cde9..d3dc03e 100644
+--- a/modules/speller/default/readonly_ws.cpp
++++ b/modules/speller/default/readonly_ws.cpp
+@@ -439,6 +439,14 @@ namespace {
+     if (data_head.endian_check != 12345678)
+       return make_err(bad_file_format, fn, _("Wrong endian order."));
+ 
++    const u32int kMaxNameSize = 4096;
++    if (data_head.dict_name_size            > kMaxNameSize ||
++        data_head.lang_name_size            > kMaxNameSize ||
++        data_head.soundslike_name_size      > kMaxNameSize ||
++        data_head.soundslike_version_size   > kMaxNameSize) {
++      return make_err(bad_file_format, fn);
++    }
++
+     CharVector word;
+ 
+     word.resize(data_head.dict_name_size);
