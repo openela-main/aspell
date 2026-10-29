@@ -1,7 +1,7 @@
 Summary: Spell checker
 Name: aspell
 Version: 0.60.6.1
-Release: 22%{?dist}
+Release: 23%{?dist}
 Epoch: 12
 # LGPLv2+ .. common/gettext.h
 # LGPLv2  .. modules/speller/default/phonet.hpp,
@@ -30,6 +30,8 @@ Patch7: aspell-0.60.6.1-gcc7-fixes.patch
 Patch8: aspell-0.60.6.1-fix-back-on-empty-vector.patch
 # resolves: #1988497
 Patch9: aspell-0.60.6.1-CVE-2019-25051.patch
+# https://github.com/GNUAspell/aspell/security/advisories/GHSA-p35p-2mw5-fj5j
+Patch10: aspell-0.60.6.1-reserve-and-datahead-cap.patch
 
 BuildRequires: gcc-c++
 BuildRequires: chrpath, gettext, ncurses-devel, pkgconfig, perl-interpreter
@@ -70,6 +72,8 @@ and header files needed for Aspell development.
 %patch7 -p1 -b .gcc7-fixes
 %patch8 -p1 -b .back-empty-vector
 %patch9 -p1 -b .CVE-2019-25051
+%patch10 -p1
+
 iconv -f iso-8859-2 -t utf-8 < manual/aspell.info > manual/aspell.info.aux
 mv manual/aspell.info.aux manual/aspell.info
 
@@ -162,6 +166,9 @@ fi
 %{_mandir}/man1/pspell-config.1*
 
 %changelog
+* Tue Oct 20 2026 Daniel Handzus <dhandzus@redhat.com> - 12:0.60.6.1-23
+- Backport fix for CVE-2026-103658
+
 * Mon Oct 11 2021 Nikola Forró <nforro@redhat.com> - 12:0.60.6.1-22
 - resolves: #1988497
   fix CVE-2019-25051
